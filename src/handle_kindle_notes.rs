@@ -1,5 +1,7 @@
 pub fn parse_kindle_notes(path: &str) {
     println!("{}", path);
+    let file: String = std::fs::read_to_string(path).expect("No file found.");
+    println!("{}", file);
 }
 
 /// Checks if a given file name ends with .txt extension

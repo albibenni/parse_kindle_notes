@@ -33,10 +33,16 @@ fn main() {
             let folders: &String = arguments
                 .get(1)
                 .expect("Provide a folder path as first argument");
-            let mut full_path = String::from("~/");
+
+            #[allow(deprecated)]
+            let home = std::env::home_dir().expect("nopeee");
+            let home_str = home.to_str().expect("Str");
+            let mut full_path = String::from(home_str);
+            full_path.push_str("/");
             full_path.push_str(&folders);
             full_path.push_str("/");
             full_path.push_str(&file_name);
+
             handle_kindle_notes::parse_kindle_notes(&full_path);
         }
         _ => {
