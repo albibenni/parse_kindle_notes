@@ -64,11 +64,16 @@ pub fn compose_full_path(folders: &String, file_name: &String) -> String {
 /// help(); // Prints usage information to stdout
 /// ```
 pub fn help() {
-    println!("Usage: 1 Argument: kindle-notes-parser <file>");
-    println!("file: The file containing the Kindle notes, ending with .txt");
-    println!("Usage: 2 Arguments: kindle-notes-parser <folder> <file>");
-    println!("folder: The folder where the file is located");
-    println!("file: The file containing the Kindle notes, ending with .txt");
+    println!("Usage:");
+    println!("2 Arguments: 'kindle-notes-parser <file> <book_title>'");
+    println!("  - 'kindle-notes-parser <file> <book_title>'");
+    println!("      - file: The file containing the Kindle notes, ending with .txt");
+    println!("      - book_title: The book title you want the Kindle notes of");
+    println!("3 Arguments: 'kindle-notes-parser <folder> <file> <book_title>'");
+    println!("  - 'kindle-notes-parser <folder> <file> <book_title>'");
+    println!("      - folder: The folder where the file is located");
+    println!("      - file: The file containing the Kindle notes, ending with .txt");
+    println!("      - book_title: The book title you want the Kindle notes of");
 }
 
 #[cfg(test)]

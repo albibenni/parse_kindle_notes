@@ -1,4 +1,4 @@
-pub fn parse_kindle_notes(path: &str) {
+pub fn parse_kindle_notes(path: &str, book_title: &str) {
     println!("{}", path);
     let file: String = std::fs::read_to_string(path).expect("No file found.");
 
@@ -8,7 +8,6 @@ pub fn parse_kindle_notes(path: &str) {
     //     let replac = lines[0].replace("\u{feef}", "");
     // }
     let mut parsed_file: Vec<&str> = Vec::new();
-    let book_title = "effective typescript";
     // book_title ckeck to check what to parse
     let mut is_book_title = false;
     for idx in 0..lines.len() {
