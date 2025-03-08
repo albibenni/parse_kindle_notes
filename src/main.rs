@@ -1,3 +1,5 @@
+use utils::compose_full_path;
+
 #[path = "./handle_kindle_notes.rs"]
 mod handle_kindle_notes;
 
@@ -24,7 +26,7 @@ fn main() {
         }
         3 => {
             let arguments: Vec<String> = args.map(|arg| arg).collect();
-            let file_name = arguments
+            let file_name: &String = arguments
                 .get(2)
                 .expect("Provide a file name as second argument");
             if !utils::file_check(&file_name, &extension_supported) {
@@ -34,15 +36,7 @@ fn main() {
                 .get(1)
                 .expect("Provide a folder path as first argument");
 
-            #[allow(deprecated)]
-            let home = std::env::home_dir().expect("nopeee");
-            let home_str = home.to_str().expect("Str");
-            let mut full_path = String::from(home_str);
-            full_path.push_str("/");
-            full_path.push_str(&folders);
-            full_path.push_str("/");
-            full_path.push_str(&file_name);
-
+            let full_path = compose_full_path(folders, file_name);
             handle_kindle_notes::parse_kindle_notes(&full_path);
         }
         _ => {
