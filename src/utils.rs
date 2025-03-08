@@ -42,7 +42,6 @@ pub fn compose_full_path(folders: &String, file_name: &String) -> String {
     let home = std::env::home_dir().expect("nopeee");
     let home_str = home.to_str().expect("Str");
     let mut full_path = String::from(home_str);
-    full_path.push_str(home_str);
     full_path.push_str("/");
     full_path.push_str(&folders);
     full_path.push_str("/");
@@ -108,7 +107,7 @@ mod tests {
         let folders = String::from("Documents/Kindle");
         let file_name = String::from("notes.txt");
 
-        let expected_path = format!("{}{}/{}/{}", mock_home, mock_home, folders, file_name);
+        let expected_path = format!("{}/{}/{}", mock_home, folders, file_name);
         let result = compose_full_path(&folders, &file_name);
 
         // Restore the original home directory if it existed
