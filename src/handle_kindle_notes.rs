@@ -2,9 +2,26 @@ pub fn parse_kindle_notes(path: &str) {
     println!("{}", path);
     let file: String = std::fs::read_to_string(path).expect("No file found.");
 
-    let file_split: Vec<&str> = file.split("==========").collect();
+    let lines: Vec<&str> = file.split("\n").collect();
     //println!("{}", &file);
-    println!("{:?}", file_split);
+    let mut v: Vec<&str> = Vec::new();
+    let book_title = "tbd";
+    for idx in 0..lines.len() {
+        let line: &str = lines.get(idx).expect("Wrong index");
+        if line.to_lowercase().starts_with(&book_title.to_lowercase()) {}
+        if line == "==========" {
+            v.push(" ");
+            v.push("---");
+        }
+        if line.trim() == ""
+            || line.starts_with("- Your Highlight at location")
+            || line.starts_with("- Your Highlight on page")
+            || line.starts_with(book_title)
+        {
+            continue;
+        }
+        //notes.push(line);
+    }
 }
 
 /// Checks if a given file name ends with .txt extension
