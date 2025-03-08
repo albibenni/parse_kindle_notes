@@ -2,11 +2,16 @@ pub fn parse_kindle_notes(path: &str, book_title: &str) {
     println!("{}", path);
     let file: String = std::fs::read_to_string(path).expect("No file found.");
 
-    let repl = &file.replace("\u{feef}", "");
+    let repl: &String = &file.replace("\u{feef}", "");
     let lines: &Vec<&str> = &repl.split("\n").collect();
-    // if lines.get(0).expect("No note found").contains("\u{feef}") {
-    //     let replac = lines[0].replace("\u{feef}", "");
-    // }
+    let parsed_file = parse_file_by_book_title(book_title, lines);
+
+    for l in parsed_file {
+        println!("LOL: {:?}", l);
+    }
+}
+
+fn parse_file_by_book_title<'a>(book_title: &str, lines: &Vec<&'a str>) -> Vec<&'a str> {
     let mut parsed_file: Vec<&str> = Vec::new();
     // book_title ckeck to check what to parse
     let mut is_book_title = false;
@@ -38,10 +43,7 @@ pub fn parse_kindle_notes(path: &str, book_title: &str) {
         }
         parsed_file.push(line);
     }
-
-    for l in parsed_file {
-        println!("LOL: {:?}", l);
-    }
+    return parsed_file;
 }
 
 /// Checks if a given file name ends with .txt extension

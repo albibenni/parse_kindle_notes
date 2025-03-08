@@ -26,8 +26,6 @@ fn main() {
                 return;
             }
 
-            println!("folders {}", book_title);
-            println!("filename {}", file_name);
             handle_kindle_notes::parse_kindle_notes(&file_name, &book_title);
         }
         4 => {
@@ -45,10 +43,7 @@ fn main() {
                 .get(1)
                 .expect("Provide a folder path as first argument");
 
-            println!("folders {}", &folders);
-            println!("filename {}", &file_name);
-            println!("folders {}", &book_title);
-            let full_path = compose_full_path(folders, file_name);
+            let full_path = compose_full_path(&folders, &file_name);
             handle_kindle_notes::parse_kindle_notes(&full_path, &book_title);
         }
         _ => {
