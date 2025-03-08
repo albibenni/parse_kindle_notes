@@ -2,16 +2,33 @@ pub fn parse_kindle_notes(path: &str) {
     println!("{}", path);
     let file: String = std::fs::read_to_string(path).expect("No file found.");
 
-    let lines: Vec<&str> = file.split("\n").collect();
-    //println!("{}", &file);
-    let mut v: Vec<&str> = Vec::new();
-    let book_title = "tbd";
+    let repl = &file.replace("\u{feef}", "");
+    let lines: &Vec<&str> = &repl.split("\n").collect();
+    // if lines.get(0).expect("No note found").contains("\u{feef}") {
+    //     let replac = lines[0].replace("\u{feef}", "");
+    // }
+    let mut parsed_file: Vec<&str> = Vec::new();
+    let book_title = "effective typescript";
+    // book_title ckeck to check what to parse
+    let mut is_book_title = false;
     for idx in 0..lines.len() {
         let line: &str = lines.get(idx).expect("Wrong index");
-        if line.to_lowercase().starts_with(&book_title.to_lowercase()) {}
+        // book_title ckeck
+        if line.to_lowercase().starts_with(&book_title.to_lowercase()) {
+            println!("whatt{}", line);
+            is_book_title = true;
+            continue;
+        }
+        // parse only book title paragraphs
+        if !is_book_title {
+            is_book_title = false;
+            continue;
+        }
         if line == "==========" {
-            v.push(" ");
-            v.push("---");
+            parsed_file.push(" ");
+            parsed_file.push("---");
+            is_book_title = false;
+            continue;
         }
         if line.trim() == ""
             || line.starts_with("- Your Highlight at location")
@@ -20,7 +37,11 @@ pub fn parse_kindle_notes(path: &str) {
         {
             continue;
         }
-        //notes.push(line);
+        parsed_file.push(line);
+    }
+
+    for l in parsed_file {
+        println!("LOL: {:?}", l);
     }
 }
 
