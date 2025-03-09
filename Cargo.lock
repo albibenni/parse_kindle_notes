@@ -16,7 +16,7 @@ checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
 
 [[package]]
 name = "parse_kindle_notes"
-version = "0.1.0"
+version = "1.0.0"
 dependencies = [
  "anyhow",
  "dotenv",
