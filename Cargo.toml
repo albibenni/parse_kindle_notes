@@ -6,4 +6,3 @@ edition = "2021"
 [dependencies]
 anyhow = "1.0.97"
 dotenv = "0.15.0"
-stderrlog = "0.6.0"

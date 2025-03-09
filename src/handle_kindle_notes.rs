@@ -2,6 +2,26 @@ use std::fs;
 
 const NOTE_PATH: &str = "NOTE_PATH";
 
+/// Parses Kindle notes from a text file and extracts highlights for a specific book
+///
+/// # Arguments
+///
+/// * `path` - The file path to the Kindle notes text file
+/// * `book_title` - The title of the book to extract highlights from
+///
+/// # Returns
+///
+/// A nested Result:
+/// * The outer Result (`Result<_, E>`) handles any errors not related to IO operations
+/// * The inner Result (`Result<(), std::io::Error>`) specifically handles IO errors from writing the parsed notes
+///
+/// # Process
+///
+/// 1. Loads environment variables from .env file
+/// 2. Reads the Kindle notes file from the provided path
+/// 3. Removes any BOM (Byte Order Mark) characters from the file content
+/// 4. Splits the content into lines and passes to the parser
+/// 5. Writes the parsed highlights to a new markdown file
 pub fn parse_kindle_notes<E>(
     path: &str,
     book_title: &str,
