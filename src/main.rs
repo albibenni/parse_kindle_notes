@@ -26,7 +26,7 @@ fn main() {
                 return;
             }
 
-            handle_kindle_notes::parse_kindle_notes(&file_name, &book_title);
+            let _res = handle_kindle_notes::parse_kindle_notes::<String>(&file_name, &book_title);
         }
         4 => {
             let arguments: Vec<String> = args.map(|arg| arg).collect();
@@ -44,7 +44,7 @@ fn main() {
                 .expect("Provide a folder path as first argument");
 
             let full_path = compose_full_path(&folders, &file_name);
-            handle_kindle_notes::parse_kindle_notes(&full_path, &book_title);
+            let _res = handle_kindle_notes::parse_kindle_notes::<String>(&full_path, &book_title);
         }
         _ => {
             utils::help();

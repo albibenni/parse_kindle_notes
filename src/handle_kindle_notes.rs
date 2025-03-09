@@ -1,14 +1,24 @@
-pub fn parse_kindle_notes(path: &str, book_title: &str) {
-    println!("{}", path);
+use std::fs;
+
+const NOTE_PATH: &str = "NOTE_PATH";
+
+pub fn parse_kindle_notes<E>(
+    path: &str,
+    book_title: &str,
+) -> Result<Result<(), std::io::Error>, E> {
+    dotenv::dotenv().ok();
+
     let file: String = std::fs::read_to_string(path).expect("No file found.");
 
     let repl: &String = &file.replace("\u{feef}", "");
     let lines: &Vec<&str> = &repl.split("\n").collect();
-    let parsed_file = parse_file_by_book_title(book_title, lines);
+    let parsed_file = parse_file_by_book_title(&book_title, &lines);
 
-    for l in parsed_file {
-        println!("LOL: {:?}", l);
-    }
+    let parsed: String = parsed_file.join("\n");
+    let new_path = new_write_path(&book_title);
+    println!("{}", new_path);
+    let res = fs::write(new_path, &parsed);
+    return Ok(res);
 }
 
 /// Parses Kindle notes file content to extract highlights for a specific book title
@@ -37,7 +47,6 @@ fn parse_file_by_book_title<'a>(book_title: &str, lines: &Vec<&'a str>) -> Vec<&
         let line: &str = lines.get(idx).expect("Wrong index");
         // book_title ckeck
         if line.to_lowercase().starts_with(&book_title.to_lowercase()) {
-            println!("whatt{}", line);
             is_book_title = true;
             continue;
         }
@@ -64,6 +73,35 @@ fn parse_file_by_book_title<'a>(book_title: &str, lines: &Vec<&'a str>) -> Vec<&
     return parsed_file;
 }
 
+/// Generates a path for writing notes to a markdown file
+///
+/// # Arguments
+///
+/// * `book_title` - The title of the book to use for generating the filename
+///
+/// # Returns
+///
+/// A `String` containing the full path to the markdown file where notes will be saved
+///
+/// # Panics
+///
+/// This function will panic if:
+/// - The environment variable specified by `NOTE_PATH` is not set
+/// - The book title is empty
+fn new_write_path(book_title: &str) -> String {
+    let folder_base =
+        std::env::var(NOTE_PATH).expect("Env var not found, provide a path to write the file");
+    let mut book_title_chars = book_title.chars();
+    let file_name = match book_title_chars.next() {
+        None => panic!("Book title is empty!"),
+        Some(c) => {
+            folder_base + &c.to_uppercase().collect::<String>() + book_title_chars.as_str() + ".md"
+        }
+    };
+
+    return file_name;
+}
+
 /// Checks if a given file name ends with .txt extension
 ///
 /// # Arguments
@@ -81,6 +119,7 @@ pub fn check_file_name(file_name: &str, extension_supported: &str) -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use std::env;
 
     #[test]
     fn test_check_file_name() {
@@ -204,5 +243,77 @@ mod tests {
         let result = parse_file_by_book_title(book_title, &lines);
 
         assert_eq!(result, vec!["This is a highlight", " ", "---"]);
+    }
+
+    #[test]
+    fn test_new_write_path_normal_title() {
+        // Setup: Set the environment variable
+        let temp_path = "/tmp/notes/";
+        env::set_var(NOTE_PATH, temp_path);
+
+        // Test with a normal book title
+        let book_title = "the great gatsby";
+        let result = new_write_path(book_title);
+
+        // First character should be uppercase, and it should end with .md
+        assert_eq!(result, format!("{}The great gatsby.md", temp_path));
+
+        // Cleanup
+        env::remove_var(NOTE_PATH);
+    }
+
+    #[test]
+    fn test_new_write_path_single_word() {
+        // Setup
+        let temp_path = "/tmp/notes/";
+        env::set_var(NOTE_PATH, temp_path);
+
+        // Test with single word
+        let book_title = "golang";
+        let result = new_write_path(book_title);
+
+        assert_eq!(result, format!("{}Golang.md", temp_path));
+
+        // Cleanup
+        env::remove_var(NOTE_PATH);
+    }
+
+    #[test]
+    fn test_new_write_path_with_special_chars() {
+        // Setup
+        let temp_path = "/tmp/notes/";
+        env::set_var(NOTE_PATH, temp_path);
+
+        // Test with a title containing special characters
+        let book_title = "object-oriented design";
+        let result = new_write_path(book_title);
+
+        assert_eq!(result, format!("{}Object-oriented design.md", temp_path));
+
+        // Cleanup
+        env::remove_var(NOTE_PATH);
+    }
+
+    #[test]
+    #[should_panic(expected = "Env var not found")]
+    fn test_new_write_path_missing_env_var() {
+        // Ensure the environment variable is not set
+        env::remove_var(NOTE_PATH);
+
+        // This should panic since the environment variable is not set
+        let _ = new_write_path("any title");
+    }
+
+    #[test]
+    #[should_panic(expected = "Book title is empty!")]
+    fn test_new_write_path_empty_title() {
+        // Setup
+        env::set_var(NOTE_PATH, "/tmp/notes/");
+
+        // This should panic because the title is empty
+        let _ = new_write_path("");
+
+        // Cleanup
+        env::remove_var(NOTE_PATH);
     }
 }
