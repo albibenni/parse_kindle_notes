@@ -16,7 +16,6 @@ pub fn parse_kindle_notes<E>(
 
     let parsed: String = parsed_file.join("\n");
     let new_path = new_write_path(&book_title);
-    println!("{}", new_path);
     let res = fs::write(new_path, &parsed);
     return Ok(res);
 }
@@ -95,7 +94,13 @@ fn new_write_path(book_title: &str) -> String {
     let file_name = match book_title_chars.next() {
         None => panic!("Book title is empty!"),
         Some(c) => {
-            folder_base + &c.to_uppercase().collect::<String>() + book_title_chars.as_str() + ".md"
+            folder_base
+                + &c.to_uppercase().collect::<String>()
+                + book_title_chars.as_str()
+                + "/"
+                + &c.to_uppercase().collect::<String>()
+                + book_title_chars.as_str()
+                + ".md"
         }
     };
 
