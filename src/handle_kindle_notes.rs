@@ -261,7 +261,10 @@ mod tests {
         let result = new_write_path(book_title);
 
         // First character should be uppercase, and it should end with .md
-        assert_eq!(result, format!("{}The great gatsby.md", temp_path));
+        assert_eq!(
+            result,
+            format!("{}The great gatsby/The great gatsby.md", temp_path)
+        );
 
         // Cleanup
         env::remove_var(NOTE_PATH);
@@ -277,7 +280,7 @@ mod tests {
         let book_title = "golang";
         let result = new_write_path(book_title);
 
-        assert_eq!(result, format!("{}Golang.md", temp_path));
+        assert_eq!(result, format!("{}Golang/Golang.md", temp_path));
 
         // Cleanup
         env::remove_var(NOTE_PATH);
@@ -293,7 +296,13 @@ mod tests {
         let book_title = "object-oriented design";
         let result = new_write_path(book_title);
 
-        assert_eq!(result, format!("{}Object-oriented design.md", temp_path));
+        assert_eq!(
+            result,
+            format!(
+                "{}Object-oriented design/Object-oriented design.md",
+                temp_path
+            )
+        );
 
         // Cleanup
         env::remove_var(NOTE_PATH);
