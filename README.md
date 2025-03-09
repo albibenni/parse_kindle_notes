@@ -12,7 +12,7 @@ It outputs a `.md` file with `---` spacers between each of them in the selected 
   - 2 args:
     1. **File name** to read from, must be of a supported extension (as of now `.txt`).
     2. **Book name** to parse notes from, eg. `the\ rust\ programming\ language`.
-    - 3 args:
+  - 3 args:
     1. **Folder name** where the file is located, eg. `Downloads/some`, to read from.
     2. **File name** to read from, must be of a supported extension (as of now `.txt`).
     3. **Book name** to parse notes from, eg. `the\ rust\ programming\ language`.
