@@ -36,7 +36,18 @@ pub fn parse_kindle_notes<E>(
 
     let parsed: String = parsed_file.join("\n");
     let new_path = new_write_path(&book_title);
-    let res = fs::write(new_path, &parsed);
+    // create folder first else if doesnt exist will fail
+    let new_folder_base =
+        new_path[..new_path.len() - format!("/{}.md", book_title).len()].to_string();
+    std::fs::create_dir_all(&new_folder_base).expect("Failed to create directory for notes");
+    let res = fs::write(&new_path, &parsed);
+    println!(
+        "Parsed {} highlights from book: {}",
+        parsed_file.len(),
+        book_title
+    );
+
+    println!("File written to: {}", &new_path);
     return Ok(res);
 }
 
