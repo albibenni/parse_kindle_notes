@@ -73,32 +73,38 @@ fn parse_file_by_book_title<'a>(book_title: &str, lines: &Vec<&'a str>) -> Vec<&
     let mut parsed_file: Vec<&str> = Vec::new();
     // book_title ckeck to check what to parse
     let mut is_book_title = false;
-    for idx in 0..lines.len() {
+    'line_loop: for idx in 0..lines.len() {
         let line: &str = lines.get(idx).expect("Wrong index");
         // book_title ckeck
         if line.to_lowercase().starts_with(&book_title.to_lowercase()) {
             is_book_title = true;
-            continue;
+            continue 'line_loop;
         }
         // parse only book title paragraphs
         if !is_book_title {
             is_book_title = false;
-            continue;
+            continue 'line_loop;
         }
-        if line == "==========" {
+        if line == "==========\r"
+            || line == "==========\n"
+            || line == "=========="
+            || line == "==========\r\n"
+        {
             parsed_file.push(" ");
+            //parsed_file.push("\n");
             parsed_file.push("---");
             is_book_title = false;
-            continue;
+            continue 'line_loop;
         }
         if line.trim() == ""
             || line.starts_with("- Your Highlight at location")
             || line.starts_with("- Your Highlight on page")
             || line.starts_with(book_title)
         {
-            continue;
+            continue 'line_loop;
         }
         parsed_file.push(line);
+        println!("Parsed line: {:?}", parsed_file);
     }
     return parsed_file;
 }
